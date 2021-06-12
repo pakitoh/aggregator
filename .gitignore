@@ -1,0 +1,19 @@
+# Logs
+logs/
+*.log
+
+# Dependencies
+node_modules/
+
+# npm cache directory
+.npm
+
+# eslint cache
+.eslintcache
+
+# dotenv environment variables file
+.env
+.env.*
+
+# Editor directories and files
+.vscode
