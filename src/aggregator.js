@@ -4,13 +4,13 @@ function average(points) {
     || 0;
 }
 
-function groupByFreq(freq, times) {
-  if (!freq) {
+function groupByPeriod(period, times) {
+  if (!period) {
     return {};
   }
   return times.reduce(
     (acc, time, index) => {
-      const groupKey = new Date(Math.floor(Date.parse(time) / freq) * freq).toISOString();
+      const groupKey = new Date(Math.floor(Date.parse(time) / period) * period).toISOString();
       const currentGroupValue = acc[groupKey] || [];
       const newGroupValue = [...currentGroupValue, index];
       return { ...acc, ...{ [groupKey]: newGroupValue } };
@@ -78,9 +78,9 @@ function emptyGroup(assetData) {
     );
 }
 
-function composeAssetData(freq, assetData) {
+function composeAssetData(period, assetData) {
   const timeEntries = assetData.time || [];
-  const groups = computeGroups(assetData, groupByFreq(freq, timeEntries));
+  const groups = computeGroups(assetData, groupByPeriod(period, timeEntries));
   return Object.keys(groups)
     .reduce(
       (acc, time) => mergeGroup(acc, formatGroup(time, groups[time])),
@@ -88,7 +88,7 @@ function composeAssetData(freq, assetData) {
     );
 }
 
-function aggregate(freq, data) {
+function aggregate(period, data) {
   if (!data) {
     return {};
   }
@@ -96,7 +96,7 @@ function aggregate(freq, data) {
     .reduce(
       (acc, assetName) => ({
         ...acc,
-        [assetName]: composeAssetData(freq, data[assetName]),
+        [assetName]: composeAssetData(period, data[assetName]),
       }),
       {},
     );
@@ -104,7 +104,7 @@ function aggregate(freq, data) {
 
 module.exports = {
   average,
-  groupByFreq,
+  groupByPeriod,
   computeGroups,
   composeAssetData,
   aggregate,

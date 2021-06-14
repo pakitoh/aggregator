@@ -8,8 +8,8 @@ node_modules/
 # npm cache directory
 .npm
 
-# eslint cache
-.eslintcache
+# eslint
+.eslint*
 
 # dotenv environment variables file
 .env
@@ -20,6 +20,15 @@ node_modules/
 
 # git
 .git/
+.gitignore
 
 # Coverage reports
 coverage/
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Tests
+test/
+jest*

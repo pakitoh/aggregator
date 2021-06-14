@@ -1,6 +1,6 @@
 const {
   average,
-  groupByFreq,
+  groupByPeriod,
   computeGroups,
   composeAssetData,
   aggregate,
@@ -32,41 +32,41 @@ describe('average function', () => {
   });
 });
 
-describe('groupByFreq function', () => {
+describe('groupByPeriod function', () => {
   it('should return empty object when empty input', () => {
     const time = [];
-    const twoMinsFreq = 2 * 60 * 1000;
+    const twoMinsPeriod = 2 * 60 * 1000;
 
-    const resul = groupByFreq(twoMinsFreq, time);
+    const resul = groupByPeriod(twoMinsPeriod, time);
 
     expect(resul).toMatchObject({});
   });
 
-  it('should return empty object when no freq', () => {
+  it('should return empty object when no period', () => {
     const time = [
       '2021-06-09T18:10:00.000Z',
       '2021-06-09T18:11:00.000Z',
     ];
-    const freq = undefined;
+    const period = undefined;
 
-    const resul = groupByFreq(freq, time);
+    const resul = groupByPeriod(period, time);
 
     expect(resul).toMatchObject({});
   });
 
-  it('should return empty object when freq is zero', () => {
+  it('should return empty object when period is zero', () => {
     const time = [
       '2021-06-09T18:10:00.000Z',
       '2021-06-09T18:11:00.000Z',
     ];
-    const freq = 0;
+    const period = 0;
 
-    const resul = groupByFreq(freq, time);
+    const resul = groupByPeriod(period, time);
 
     expect(resul).toMatchObject({});
   });
 
-  it('should return indexes grouped by freq', () => {
+  it('should return indexes grouped by period', () => {
     const time = [
       '2021-06-09T18:10:00.000Z',
       '2021-06-09T18:11:00.000Z',
@@ -79,9 +79,9 @@ describe('groupByFreq function', () => {
       '2021-06-09T18:18:00.000Z',
       '2021-06-09T18:19:00.000Z',
     ];
-    const twoMinsFreq = 2 * 60 * 1000;
+    const twoMinsPeriod = 2 * 60 * 1000;
 
-    const resul = groupByFreq(twoMinsFreq, time);
+    const resul = groupByPeriod(twoMinsPeriod, time);
 
     expect(resul).toMatchObject({
       '2021-06-09T18:10:00.000Z': [0, 1],
@@ -92,15 +92,15 @@ describe('groupByFreq function', () => {
     });
   });
 
-  it('should return indexes grouped by freq with smaller first group when first time does not match', () => {
+  it('should return indexes grouped by period with smaller first group when first time does not match', () => {
     const time = [
       '2021-06-09T18:11:00.000Z',
       '2021-06-09T18:12:00.000Z',
       '2021-06-09T18:13:00.000Z',
     ];
-    const twoMinsFreq = 2 * 60 * 1000;
+    const twoMinsPeriod = 2 * 60 * 1000;
 
-    const resul = groupByFreq(twoMinsFreq, time);
+    const resul = groupByPeriod(twoMinsPeriod, time);
 
     expect(resul).toMatchObject({
       '2021-06-09T18:10:00.000Z': [0],
@@ -228,25 +228,25 @@ describe('computeGroups function', () => {
 
 describe('composeAssetData function', () => {
   it('should return empty object when empty data', () => {
-    const fiveMinsFreq = 5 * 60 * 1000;
+    const fiveMinsPeriod = 5 * 60 * 1000;
 
-    const resul = composeAssetData(fiveMinsFreq, {});
+    const resul = composeAssetData(fiveMinsPeriod, {});
 
     expect(resul).toMatchObject({});
   });
 
-  it('should return empty object when no frequency', () => {
-    const freq = undefined;
+  it('should return empty object when no period', () => {
+    const period = undefined;
 
-    const resul = composeAssetData(freq, inputData.assetId1);
+    const resul = composeAssetData(period, inputData.assetId1);
 
     expect(resul).toMatchObject({});
   });
 
   it('should return formatted asset data when input data', () => {
-    const fiveMinsFreq = 5 * 60 * 1000;
+    const fiveMinsPeriod = 5 * 60 * 1000;
 
-    const resul = composeAssetData(fiveMinsFreq, inputData.assetId1);
+    const resul = composeAssetData(fiveMinsPeriod, inputData.assetId1);
 
     expect(resul).toMatchObject({
       metric1: [2, 7, 12, 17],
@@ -263,33 +263,33 @@ describe('composeAssetData function', () => {
 
 describe('aggregate function', () => {
   it('should return empty object when empty data', () => {
-    const fiveMinsFreq = 5 * 60 * 1000;
+    const fiveMinsPeriod = 5 * 60 * 1000;
 
-    const resul = aggregate(fiveMinsFreq, {});
-
-    expect(resul).toMatchObject({});
-  });
-
-  it('should return empty object when undefined data', () => {
-    const fiveMinsFreq = 5 * 60 * 1000;
-
-    const resul = aggregate(fiveMinsFreq, undefined);
-
-    expect(resul).toMatchObject({});
-  });
-
-  it('should return empty object when freq is zero', () => {
-    const freq = 0;
-
-    const resul = aggregate(freq, inputData);
+    const resul = aggregate(fiveMinsPeriod, {});
 
     expect(resul).toMatchObject({});
   });
 
   it('should return empty object when undefined data', () => {
-    const freq = undefined;
+    const fiveMinsPeriod = 5 * 60 * 1000;
 
-    const resul = aggregate(freq, inputData);
+    const resul = aggregate(fiveMinsPeriod, undefined);
+
+    expect(resul).toMatchObject({});
+  });
+
+  it('should return empty object when period is zero', () => {
+    const period = 0;
+
+    const resul = aggregate(period, inputData);
+
+    expect(resul).toMatchObject({});
+  });
+
+  it('should return empty object when undefined data', () => {
+    const period = undefined;
+
+    const resul = aggregate(period, inputData);
 
     expect(resul).toMatchObject({});
   });

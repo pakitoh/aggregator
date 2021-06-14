@@ -1,3 +1,4 @@
 const { startServer } = require('./src/server');
+const { env } = require('./src/config/env');
 
-startServer(3000);
+startServer(env);

@@ -10,7 +10,9 @@ jest.mock('../src/aggregator', () => ({
 }));
 
 const { createServer } = require('http');
-const { startServer, requestListener, postHandler } = require('../src/server');
+const {
+  setConfig, startServer, requestListener, postHandler,
+} = require('../src/server');
 const { fetch } = require('../src/fetcher');
 const { aggregate } = require('../src/aggregator');
 
@@ -18,14 +20,24 @@ const mockServer = jest.fn();
 mockServer.listen = jest.fn();
 createServer.mockReturnValue(mockServer);
 
+const env = {
+  config: {
+    port: 4000,
+    endpoint: 'https://reference.intellisense.io/test.dataprovider',
+    validPeriods: [10, 30, 60],
+  },
+};
+
+beforeAll(() => {
+  setConfig(env);
+});
+
 describe('HTTP server', () => {
   it('startServer should create server when start', () => {
-    const port = 3000;
-
-    startServer(port);
+    startServer(env);
 
     expect(createServer).toHaveBeenCalled();
-    expect(mockServer.listen).toHaveBeenCalledWith(port);
+    expect(mockServer.listen).toHaveBeenCalledWith(env.config.port);
   });
 
   it('requestListener should return 400 when no POST', () => {

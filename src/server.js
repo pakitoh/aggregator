@@ -3,11 +3,10 @@ const { fetch } = require('./fetcher');
 const { aggregate } = require('./aggregator');
 const { logger } = require('./config/logger');
 
-const VALID_FREQUENCIES = [10, 30, 60];
-const ENDPOINT = 'https://reference.intellisense.io/test.dataprovider';
+let config;
 
 function isValidPeriod(period) {
-  return VALID_FREQUENCIES.includes(period);
+  return config.validPeriods.includes(period);
 }
 
 function processEndpointData(period, endpointData) {
@@ -24,7 +23,7 @@ function postHandler(res, rawRequestData) {
   try {
     const parsedRequestData = JSON.parse(rawRequestData);
     if (isValidPeriod(parsedRequestData.period)) {
-      fetch(ENDPOINT)
+      fetch(config.endpoint)
         .then((endpointData) => {
           res.setHeader('Content-Type', 'application/json');
           res.statusCode = 200;
@@ -57,13 +56,20 @@ function requestListener(req, res) {
   }
 }
 
-function startServer(port) {
+function setConfig(env) {
+  config = env.config;
+}
+
+function startServer(env) {
+  setConfig(env);
   const server = http.createServer(requestListener);
-  server.listen(port);
+  server.listen(config.port);
+  logger.info(`Server listening on ${config.port}`);
   return server;
 }
 
 module.exports = {
+  setConfig,
   startServer,
   requestListener,
   postHandler,
